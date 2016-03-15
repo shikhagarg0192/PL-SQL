@@ -1,0 +1,153 @@
+ALTER SESSION SET current_schema = shikha_3;
+CREATE TABLE item
+  (
+    item_id     NUMBER,
+    item_number VARCHAR2(10),
+    description VARCHAR2(30),
+    status      VARCHAR2(1),
+    cost_item   NUMBER
+  );
+CREATE SEQUENCE item_id_s start with 1 increment BY 1;
+  SELECT * FROM item;
+CREATE OR REPLACE PACKAGE items_package
+IS
+  PROCEDURE ADD(
+      p_item_number IN item.item_number%type,
+      p_item_desc   IN item.description%type);
+  PROCEDURE promote(
+      p_item_id IN item.item_id%type);
+  PROCEDURE remove(
+      p_item_id IN item.item_id%type);
+  PROCEDURE chg_cost(
+      p_item_id   IN item.item_id%type,
+      p_item_cost IN item.cost_item%type);
+END items_package;
+CREATE OR REPLACE PACKAGE body items_package
+IS
+  c_test_status CONSTANT VARCHAR(1) := 'T';
+  c_live_status CONSTANT VARCHAR(1) := 'L';
+PROCEDURE p(
+    p_text IN VARCHAR2)
+IS
+BEGIN
+  dbms_output.put_line(p_text);
+END;
+PROCEDURE ADD(
+    p_item_number IN item.item_number%type,
+    p_item_desc   IN item.description%type)
+IS
+  c_new_cost CONSTANT NUMBER := 0;
+BEGIN
+  INSERT
+  INTO item VALUES
+    (
+      item_id_s.nextval,
+      p_item_number,
+      p_item_desc,
+      c_test_status,
+      c_new_cost
+    );
+  p('Item created');
+END;
+PROCEDURE promote
+  (
+    p_item_id IN item.item_id%type
+  )
+IS
+  CURSOR item_cur(p_item_id item.item_id%type)
+  IS
+    SELECT status, cost_item FROM item WHERE item_id = p_item_id FOR UPDATE;
+  r_item_cur item_cur%rowtype;
+BEGIN
+  OPEN item_cur(p_item_id);
+  FETCH item_cur INTO r_item_cur;
+  IF item_cur%NOTFOUND THEN
+    p('ITEM NOT FOUND');
+  ELSE
+    IF r_item_cur.status =  c_live_status then
+      p('ITEM ALREADY LIVE');
+    else
+      if r_item_cur.cost_item = 0 then
+        p('Cannot Promote. '||'Item costs zero');
+      else
+        update item
+        set status = c_live_status
+        where current of item_cur;
+        
+        p('Item Promoted');
+      end if;
+    end if;
+  end if;
+  close item_cur;
+end;
+
+
+procedure remove(p_item_id in item.item_id%type)
+is
+  begin
+    delete item
+    where item_id = p_item_id
+    and status = c_test_status;
+    
+    if sql%notfound then
+      p('Item not found');
+    else
+      p('Item removed');
+    end if;
+  end;
+
+procedure chg_cost(p_item_id IN item.item_id%type,
+      p_item_cost IN item.cost_item%type)
+is
+  begin
+    update item
+    set cost_item = p_item_cost
+    where item_id = p_item_id;
+    
+    if sql%notfound then
+      p('Item not found');
+    else
+      p('Item Cost updated');
+    end if;
+  end;
+  
+end items_package;
+        
+set serveroutput on;
+begin
+  SHIKHA_3.ITEMS_PACKAGE.ADD(214, 'brinjal');
+  SHIKHA_3.ITEMS_PACKAGE.chg_cost(3,50.00);
+  SHIKHA_3.ITEMS_PACKAGE.PROMOTE(2);
+end;
+    
+    
+    
+
+select * from item;          
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                

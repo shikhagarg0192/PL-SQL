@@ -1,0 +1,15 @@
+DECLARE
+  fname employee.first_name%type;
+  lname employee.last_name%type;
+  sal employee.salary%type;
+BEGIN
+  SELECT first_name,
+    last_name,
+    salary
+  INTO fname,
+    lname,
+    sal
+  FROM employee
+  WHERE id = '04';
+  DBMS_OUTPUT.PUT_LINE(fname || ' ' || lname || ' ' || sal);
+END;

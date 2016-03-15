@@ -1,0 +1,91 @@
+CREATE TABLE ORDER1
+(
+ORD_ID NUMBER GENERATED ALWAYS AS IDENTITY,
+ORD_AMT NUMBER
+);
+
+BEGIN
+for i in reverse 1..10 loop
+DBMS_OUTPUT.PUT_LINE(i);
+end loop;
+end;
+
+
+declare
+v_num number := &v_num;
+v_fact number;
+begin
+v_fact := 1;
+for i in 1..v_num loop
+  v_fact := v_fact * i;
+  end loop;
+  dbms_output.put_line('factorial of '||v_num||' is '||v_fact);
+end;
+set serveroutput on;
+
+declare 
+type emp_var is varray(10) of employee.salary%type;
+x_emp_var emp_var := emp_var();
+begin
+x_emp_var.extend;
+x_emp_var(1) := 1;
+x_emp_var.extend;
+x_emp_var(2) := 2;
+DBMS_OUTPUT.put_line(x_emp_var(1) || ' ' || x_emp_var(2));
+end;
+
+
+
+declare 
+type emp_varr is varray(10) of employee.last_name%type;
+x_emp_varr_ln emp_varr := emp_varr(5);
+begin
+select last_name into x_emp_varr_ln(1) from employee where first_name = 'David';
+DBMS_OUTPUT.PUT_LINE(x_emp_varr_ln(1));
+end;
+
+
+
+create or replace procedure get_area(len in number, wid in number, area out number)
+as
+begin
+area := len*wid;
+DBMS_OUTPUT.put_line(area);
+end;
+
+create or replace procedure print(input in varchar) as 
+begin
+DBMS_OUTPUT.PUT_LINE(INPUT);
+END;
+
+EXECUTE PRINT('HELLO');
+
+VARIABLE A NUMBER;
+execute get_area(10,20,:A);
+
+
+CREATE OR REPLACE PROCEDURE REMOVE_EMP(EMPLOYEEID INT) AS
+TOT_LEFT NUMBER;
+BEGIN
+SELECT count(*) into TOT_LEFT FROM EMPLOYEE; --WHERE EMPLOYEE.ID = EMPLOYEEID;
+DELETE FROM EMPLOYEE WHERE EMPLOYEE.ID = EMPLOYEEID;
+TOT_LEFT := TOT_LEFT - 1;
+DBMS_OUTPUT.PUT_LINE(TOT_LEFT || ' LEFT');
+END;
+
+
+EXECUTE REMOVE_EMP(05);
+
+
+SELECT COUNT(*) FROM EMPLOYEE;
+SELECT * FROM EMPLOYEE;
+
+select ROWNUM from employee;
+
+
+
+
+
+
+
+

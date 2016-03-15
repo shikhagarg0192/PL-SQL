@@ -1,0 +1,86 @@
+create procedure empidupdate(EMPID in varchar2) as
+begin
+DELETE FROM EMPLOYEE WHERE ID = EMPID;
+--update employee
+--set id = '001'
+--where id = empid;
+EXCEPTION
+when NO_DATA_FOUND THEN
+DBMS_OUTPUT.PUT_LINE('nOT FOUND');
+end;
+
+SET SERVEROUTPUT ON;
+DROP PROCEDURE EMPIDUPDATE;
+
+execute EMPIDUPDATE('05');
+
+select * from employee;
+
+DECLARE
+AB NUMBER := 20;
+BC NUMBER := 0;
+CD NUMBER;
+BEGIN
+CD := AB/BC;
+EXCEPTION
+WHEN ZERO_DIVIDE THEN
+DBMS_OUTPUT.PUT_LINE('HIII');
+END;
+
+
+create table abc(a number);
+
+declare
+at1 abc%rowtype;
+begin 
+select * into at1 from abc;
+exception 
+when no_data_found then
+DBMS_OUTPUT.PUT_LINE('no rows');
+end;
+
+declare 
+num number;
+begin
+select count(*) into num from employee;
+if num < 10 then
+  RAISE_APPLICATION_ERROR(-20091, 'atleast 10 are required');
+else
+NULL;
+end if;
+end;
+
+
+
+declare
+e_sal exception;
+v_sal number;
+begin
+select sum(salary) into v_sal from employee;
+if v_sal < 50000 then
+raise e_sal;
+end if;
+exception
+when e_sal then
+DBMS_OUTPUT.PUT_LINE('message '|| v_sal);
+end;
+
+
+declare 
+a1 number := 2;
+b1 number := 3;
+c1 number;
+num_exc exception;
+begin
+if a1<b1 then
+raise num_exc;
+end if;
+exception 
+when num_exc then
+c1 := a1;
+a1 := b1;
+b1 := c1;
+DBMS_OUTPUT.PUT_LINE(a1 || ' ' || b1);
+end;
+
+select * from employee;

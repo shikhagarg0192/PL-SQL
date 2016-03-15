@@ -1,0 +1,16 @@
+set serveroutput on;
+create or replace trigger emp_update_trigger1
+before delete or insert or update
+on employee
+--declare 
+--a varchar2(10) := to_Char(sysdate,'day'); 
+begin
+if (to_Char(sysdate,'day') like 's%') or (to_char(sysdate,'hh:mi') not between '08:30' and '18:30') then
+raise_application_error(-20500,'error: not an appropriate day and time to make changes in table');
+--DBMS_OUTPUT.PUT_LINE(a);
+end if;
+end;
+
+delete from employee where id = '08';
+
+drop trigger EMP_UPDATE_TRIGGER1;

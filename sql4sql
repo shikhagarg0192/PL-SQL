@@ -1,0 +1,52 @@
+create function ask_salary(empno in varchar2)
+return number
+is emp_sal number(8,2);
+Begin
+select salary 
+into emp_sal
+from employee 
+where ID=empno;
+return(emp_sal);
+end;
+
+
+drop function Ask_salary;
+
+select ASK_SALARY('02') from dual;
+
+select * from employee;
+
+set serveroutput on;
+begin
+update employee set salary = salary + 200 where id = '02';
+end;
+
+<<BLOCK1>>
+DECLARE
+L_ROW EMPLOYEE%ROWTYPE;
+BEGIN
+SELECT * INTO L_ROW
+FROM EMPLOYEE
+WHERE ID = '02';
+DBMS_OUTPUT.PUT_LINE(L_ROW.LAST_NAME);
+END;
+
+DECLARE
+emp_id EMPLOYEE.ID%type;
+CURSOR c1 IS
+    select id from employee for update;
+BEGIN
+  OPEN c1;
+  LOOP
+    FETCH c1 into emp_id;
+    EXIT WHEN c1%NOTFOUND;
+    update employee
+    set id =  concat(to_char(100),TO_CHAR(id))
+    where CURRENT of c1;
+  END LOOP;
+  CLOSE c1;
+END;
+
+
+SELECT * FROM EMPLOYEE;
+

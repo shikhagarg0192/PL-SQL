@@ -1,0 +1,43 @@
+CREATE OR REPLACE TRIGGER mytrig2 
+AFTER DELETE OR INSERT OR UPDATE ON employee 
+FOR EACH ROW
+BEGIN        
+IF DELETING THEN   
+INSERT INTO xemployee          
+VALUES (:old.id, :old.first_name,:old.last_name, sysdate);         
+ELSIF INSERTING THEN         
+ INSERT INTO nemployee           
+VALUES (:new.id, :new.first_name,:new.last_name, sysdate);    
+ ELSIF UPDATING('salary') THEN          
+INSERT INTO cemployee
+VALUES (:old.id,:old.salary, :new.salary, sysdate);          
+END IF;
+END;
+
+create table xemployee(
+ID                 VARCHAR2(4) NOT NULL,
+First_Name         VARCHAR2(10),
+Last_Name          VARCHAR2(10),
+deldate           DATE);
+
+create table nemployee(
+ID                 VARCHAR2(4) NOT NULL,
+First_Name         VARCHAR2(10),
+Last_Name          VARCHAR2(10),
+adddate           DATE);
+
+create table cemployee(
+ID                 VARCHAR2(4) NOT NULL,
+oldsalary             Number(8,2),
+newsalary             Number(8,2),
+up_date         DATE);
+
+
+insert Into Employee values('10','Jason3',    'Martin3',  to_date('19960725','YYYYMMDD'), to_date('20060725','YYYYMMDD'), 1234.56, 'Toronto','Programmer');
+delete from employee where id = '09';
+update employee set salary = 4000.00 where first_name = 'Jason3';
+
+select * from SHIKHA_3.XEMPLOYEE;
+select * from SHIKHA_3.NEMPLOYEE;
+select * from SHIKHA_3.CEMPLOYEE;
+select * from employee;

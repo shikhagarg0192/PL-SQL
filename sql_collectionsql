@@ -1,0 +1,57 @@
+alter session set current_schema = shikha_3;
+set serveroutput on;
+
+declare
+type salary is table of employee.salary%type index by varchar2(20);
+salary_list salary;
+names varchar2(20);
+begin
+salary_list('alex') := 20000;
+salary_list('buck') := 30000;
+salary_list('chuck') := 40000;
+salary_list('dane') := 50000;
+DBMS_OUTPUT.PUT_LINE('Index ' || 'Value');
+names := salary_list.first;
+while names is not null loop
+  dbms_output.put_line(names|| ' ' || salary_list(names));
+  names := salary_list.next(names);
+end loop;
+end;
+
+declare
+type grades is table of integer;
+marks grades;
+total integer;
+names varchar2(10);
+percentage number;
+marks_sum number := 0;
+begin
+names := 'alice';
+marks:= grades(98, 97, 78, 87, 92);
+total := marks.count * 100;
+DBMS_OUTPUT.PUT_LINE('Total '|| total || ' marks');
+    for i in 1 .. marks.count loop
+      marks_sum := marks_sum + marks(i);
+    end loop;
+percentage := (marks_sum/total)* 100;
+DBMS_OUTPUT.PUT_LINE(names || ' scored '||marks_sum || ' marks');
+DBMS_OUTPUT.PUT_LINE('Percentage : '|| percentage);
+end;
+
+
+declare
+cursor c_lname is
+select last_name from employee;
+type lname is varray(9) of employee.last_name%type;
+lsname lname:=lname();
+n integer := 0;
+begin
+for i in c_lname loop
+  n := n+1;
+  lsname.extend;
+  lsname(n) := i.last_name;
+  DBMS_OUTPUT.PUT_LINE(lsname(n));
+end loop;
+end;
+
+select * from employee;

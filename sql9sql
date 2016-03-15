@@ -1,0 +1,119 @@
+select * from employee;
+
+declare
+emp_rec employee%rowtype;
+begin
+  select * 
+  into emp_rec
+  from employee
+  where id='10';
+  
+  DBMS_OUTPUT.PUT_LINE('First name : ' ||emp_rec.first_name || ', last name : ' || emp_rec.last_name);
+end;
+
+
+
+begin
+update employee 
+set age = 40;
+end;
+
+
+
+declare
+  cursor emp_curs is
+    select id, first_name, last_name
+    from employee where id = '10';
+  emp_rec emp_curs%rowtype;
+begin
+  open emp_curs;
+  fetch emp_curs into emp_rec;
+  if emp_curs%notfound then
+  DBMS_OUTPUT.PUT_LINE('Record not found');
+  end if;
+  DBMS_OUTPUT.PUT_LINE('First name : ' ||emp_rec.first_name || ', last name : ' || emp_rec.last_name);
+end;
+
+
+declare
+type emp_rec is record
+(
+  id1 EMPLOYEE.ID%type,
+  fname EMPLOYEE.FIRST_NAME%type,
+  lname EMPLOYEE.LAST_NAME%type
+);
+emp1 emp_rec;
+begin
+  select id, first_name,last_name 
+  into emp1
+  from employee where id = '10';
+   DBMS_OUTPUT.PUT_LINE('First name : ' ||emp1.fname || ', last name : ' || emp1.lname);
+end;
+
+
+
+
+declare 
+fname employee.first_name%type;
+lname employee.last_name%type;
+sal employee.salary%type;
+begin
+select first_name, last_name, salary 
+into fname, lname,sal
+from employee;
+end;
+
+alter table employee
+add age number;
+
+
+
+
+declare 
+a1 number:=1;
+b number:=2;
+procedure max1()
+
+
+CREATE PROCEDURE emp_del_count(
+    empid IN VARCHAR2,
+    count1 OUT NUMBER)
+AS
+BEGIN
+  DELETE FROM employee WHERE id = empid;
+  SELECT COUNT(*) INTO count1 FROM employee;
+END;
+
+select * from employee;
+
+DECLARE
+  o_count NUMBER;
+BEGIN
+  EMP_DEL_COUNT('05',o_count);
+  DBMS_OUTPUT.PUT_LINE(o_count);
+END;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
